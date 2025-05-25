@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Pomodoro Study Timer for <strong>{{ subject_name }}</strong></h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-body" id="pomodoroCard">
+                    <div id="timer" class="display-1 mb-4">25:00</div>
+                    <div class="btn-group" role="group">
+                        <button id="startBtn" class="btn btn-success btn-lg">Start</button>
+                        <button id="pauseBtn" class="btn btn-warning btn-lg" disabled>Pause</button>
+                        <button id="resetBtn" class="btn btn-danger btn-lg">Reset</button>
+                    </div>
+                    <div class="mt-4">
+                        <h4>Current Session: <span id="sessionCount">1</span>/4</h4>
+                        <div class="progress mt-2">
+                            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h4>Study Tips</h4>
+                <ul class="list-group">
+                    <li class="list-group-item">Take a 5-minute break after each session</li>
+                    <li class="list-group-item">After 4 sessions, take a 15-30 minute break</li>
+                    <li class="list-group-item">Stay hydrated during study sessions</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let timer;
+        let timeLeft = 25 * 60;
+        let isRunning = false;
+        let currentSession = 1;
+        const totalSessions = 4;
+
+        const timerDisplay = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const sessionCount = document.getElementById('sessionCount');
+        const progressBar = document.getElementById('progressBar');
+        const card = document.getElementById('pomodoroCard');
+
+        updateTimerDisplay();
+        updateVisualsForSession();
+
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+
+                timer = setInterval(function() {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    updateProgressBar();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        handleSessionComplete();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(timer);
+                isRunning = false;
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+
+            if (currentSession % 2 === 1) {
+                timeLeft = 25 * 60;
+            } else {
+                timeLeft = (currentSession === totalSessions) ? 30 * 60 : 5 * 60;
+            }
+
+            updateTimerDisplay();
+            updateProgressBar();
+            updateVisualsForSession();
+        }
+
+        function handleSessionComplete() {
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+
+            const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+            audio.play();
+
+            if ("vibrate" in navigator) {
+                navigator.vibrate([200, 100, 200]);
+            }
+
+            currentSession++;
+            if (currentSession > totalSessions) {
+                currentSession = 1;
+            }
+
+            sessionCount.textContent = currentSession;
+
+            if (currentSession % 2 === 1) {
+                timeLeft = 25 * 60;
+                alert('Time for a study session!');
+            } else {
+                timeLeft = (currentSession === totalSessions) ? 30 * 60 : 5 * 60;
+                alert(currentSession === totalSessions
+                      ? 'Great job! Take a long break (30 minutes).'
+                      : 'Take a short break (5 minutes).');
+            }
+
+            updateTimerDisplay();
+            updateProgressBar();
+            updateVisualsForSession();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateProgressBar() {
+            let totalTime = (currentSession % 2 === 1) ? 25 * 60 : (currentSession === totalSessions ? 30 * 60 : 5 * 60);
+            const progress = ((totalTime - timeLeft) / totalTime) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function updateVisualsForSession() {
+            if (currentSession % 2 === 0) {
+                card.classList.add('bg-light');
+            } else {
+                card.classList.remove('bg-light');
+            }
+        }
+    });
+</script>
+{% endblock %}

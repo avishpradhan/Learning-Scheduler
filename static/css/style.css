@@ -1,0 +1,80 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* Progress Bars */
+.progress {
+    height: 25px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.progress-bar {
+    background-color: #3498db;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    font-size: 0.8rem;
+    color: #2c3e50;
+    padding: 0 10px;
+    text-shadow: 0 0 2px rgba(255,255,255,0.8);
+    z-index: 1;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.85em;
+    padding: 0.5em 0.75em;
+}
+
+.bg-primary {
+    background-color: #3498db!important;
+}
+
+.bg-warning {
+    background-color: #f1c40f!important;
+}
+
+/* Buttons */
+.btn-outline-primary {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.btn-outline-primary:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-outline-danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.btn-outline-danger:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .progress-text {
+        font-size: 0.7rem;
+    }
+    
+    .badge {
+        font-size: 0.75em;
+    }
+}

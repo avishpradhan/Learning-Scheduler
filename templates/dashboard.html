@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Welcome, {{ username }}!</h2>
+
+    <!-- Overall Progress Overview -->
+    <div class="mt-4">
+        <h5 class="mb-2">📈 Overall Study Progress</h5>
+        <div class="progress mb-4" style="height: 25px;">
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: {{ overall_progress }}%;" aria-valuenow="{{ overall_progress }}"
+                aria-valuemin="0" aria-valuemax="100">
+                {{ overall_progress }}%
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <!-- Subjects Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📚 My Subjects</h5>
+                    <p class="card-text">Manage your subjects and syllabus</p>
+                    <a href="{{ url_for('subjects') }}" class="btn btn-primary">Manage Subjects</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Progress Tracking</h5>
+                    <p class="card-text">Track your learning progress</p>
+                    <a href="{{ url_for('progress') }}" class="btn btn-primary">View Progress</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pomodoro Timer Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">⏱️ Pomodoro Timer</h5>
+                    <p class="card-text">Focus on your studies</p>
+                    <a href="{{ url_for('pomodoro') }}" class="btn btn-primary">Start Timer</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timetable Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📅 Timetable</h5>
+                    <p class="card-text">View and manage your study schedule</p>
+                    <a href="{{ url_for('timetable') }}" class="btn btn-primary">View Timetable</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

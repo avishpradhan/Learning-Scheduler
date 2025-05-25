@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">📈 Study Progress</h2>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary mb-4">← Back to Dashboard</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card shadow p-4 mb-4">
+        <h4 class="mb-3">Overall Progress</h4>
+        <div class="progress mb-3" style="height: 25px;">
+            <div class="progress-bar bg-success" role="progressbar"
+                 style="width: {{ overall_progress }}%;" aria-valuenow="{{ overall_progress }}"
+                 aria-valuemin="0" aria-valuemax="100">
+                {{ overall_progress }}%
+            </div>
+        </div>
+    </div>
+
+    {% for subject in subjects %}
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ subject.name }}</h5>
+            <p class="card-text">
+                Units completed: {{ subject.completed_units }} / {{ subject.total_units }}
+            </p>
+            <div class="progress mb-3" style="height: 20px;">
+                <div class="progress-bar {% if subject.progress_percent >= 80 %}bg-success{% elif subject.progress_percent >= 50 %}bg-info{% else %}bg-warning{% endif %}" 
+                     role="progressbar"
+                     style="width: {{ subject.progress_percent }}%;"
+                     aria-valuenow="{{ subject.progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+                    {{ subject.progress_percent }}%
+                </div>
+            </div>
+
+            <form method="POST" class="row g-2 align-items-center">
+                <!-- Include CSRF token here -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                <div class="col-auto">
+                    <label for="completed_units_{{ subject.id }}" class="form-label">Update Completed Units:</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" class="form-control" min="0" max="{{ subject.total_units }}" name="completed_units" id="completed_units_{{ subject.id }}" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

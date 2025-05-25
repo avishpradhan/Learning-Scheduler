@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>My Timetable</h2>
+    <a href="{{ url_for('generate_timetable') }}" class="btn btn-success mb-3">Generate New Timetable</a>
+    
+    {% for day in timetable|groupby('date') %}
+    <div class="card mb-3">
+        <div class="card-header">
+            {{ day.grouper.strftime('%A, %d %B %Y') }}
+        </div>
+        <div class="card-body">
+            {% for session in day.list %}
+            <div class="d-flex justify-content-between align-items-center mb-3 p-3 border rounded shadow-sm bg-light">
+                <div>
+                    <h5 class="mb-1">{{ session.subject.name }}</h5>
+                    <p class="mb-1 text-muted">
+                        {{ session.start_time.strftime('%H:%M') }} - {{ session.end_time.strftime('%H:%M') }}
+                    </p>
+                    <span class="badge bg-primary me-1">Priority: {{ session.subject.priority }}</span>
+                    <span class="badge bg-warning text-dark">Complexity: {{ session.subject.complexity }}</span>
+                </div>
+                <div class="text-end d-flex align-items-center">
+                    <span class="badge bg-success me-2">{{ session.duration }} mins</span>
+                    <a href="{{ url_for('pomodoro_subject', subject_name=session.subject.name) }}"
+                       class="btn btn-outline-danger btn-sm">
+                        ⏱️ Pomodoro
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
