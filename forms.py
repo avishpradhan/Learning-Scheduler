@@ -32,3 +32,4 @@ class SubjectForm(FlaskForm):
     )
     
     submit = SubmitField('Add Subject')
+    
